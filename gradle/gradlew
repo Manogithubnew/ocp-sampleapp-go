@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# ===============================
+# Resolve script directory
+# ===============================
+DIRNAME=$(cd "$(dirname "$0")" && pwd)
+
+# ===============================
+# Set APP_HOME and APP_BASE_NAME
+# ===============================
+export APP_HOME="$DIRNAME"
+export APP_BASE_NAME=$(basename "$APP_HOME")
+
+echo "APP_HOME: $APP_HOME"
+echo "APP_BASE_NAME: $APP_BASE_NAME"
+
+# ===============================
+# Set JAVA_HOME if not already set
+# ===============================
+if [ -z "$JAVA_HOME" ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
+fi
+
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# ===============================
+# Use Gradle Wrapper if available
+# ===============================
+if [ -f "$APP_HOME/gradlew" ]; then
+  echo "Using Gradle Wrapper..."
+  exec "$APP_HOME/gradlew" "$@"
+else
+  echo "Using system Gradle..."
+  exec gradle "$@"
+fi
