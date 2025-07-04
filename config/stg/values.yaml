@@ -1,0 +1,241 @@
+abTestingEnable: true
+
+app:
+  variants:
+    - name: stable
+      version: stable
+    - name: canary
+      version: canary
+
+replicaCount: 1
+
+namespace: 
+
+name: ocp-sampleapp-go
+
+image:
+  repository: < here mention complete path>
+  tag: ChangeByAutomation
+  PullPolicy: Always or ifNotPresent
+
+podDisruptionBudget:
+  minAvailable: 1 %
+
+env:
+  - name: LOG_LEVEL
+    value: "error"
+
+envFrom:
+  configMap:
+   enabled: false
+  secret:
+    enabled: false
+    name: ocp-sampleapp-go
+
+livenessProbe:
+  enabled: false
+  httpGet:
+    path: /app/healthcheck/
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 15
+  timeoutSeconds: 5
+readinessProbe:
+  httpGet:
+    path: /app/healthcheck/
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 15
+  timeoutSeconds: 5
+
+startupProbe:
+  enabled: false
+
+volumes:
+  configMapVolume:
+    enabled: false
+    name: my-config
+    mountPath: /app/config
+
+  secretVolume:
+    enabled: false
+    name: my-secret
+    mountPath: /app/secret
+
+  ephemeralVolume:
+    enabled: false
+    name: temp-storage
+    mountPath: /tmp/cache
+
+  nfs:
+    enabled: false
+    configs:
+    - name: nfs-vol1
+      mountPath: /var/nfs1
+      server: 192.168.1.36
+      path: /var/mnt/xyz
+
+  resources:
+  limits:
+    cpu: "500m"         # Max 0.5 CPU cores
+    memory: "512Mi"     # Max 512 MiB memory
+  requests:
+    cpu: "250m"         # Guaranteed 0.25 CPU cores
+    memory: "256Mi"     # Guaranteed 256 MiB memory
+
+service:
+  enabled: true
+services:
+  -  port: 8080       
+     targetPort: 80 
+     name: ocp-sampleapp-go-svc 
+     portName: sample-port-go
+
+cronjob:
+  enabled: false
+
+ingress:
+  enabled: false
+
+vpa:
+  enabled: true
+  updatePolicy:
+    updateMode: "Auto"     # Options: Auto, Initial, Off
+  resourcePolicy:
+    containerPolicies:
+      - containerName: "*"  # Apply to all containers
+        controlledResources: ["cpu", "memory"]
+        mode: "Auto"
+venafi:
+  enabled: true
+  issuerName: venafi-issuer
+  issuerType: ClusterIssuer  # or Issuer
+  zone: "DevOps\\K8s\\Apps"
+  tpp:
+    url: "https://venafi.example.com"
+    credentialsSecretRef:
+      name: venafi-tpp-secret
+      passwordKey: password
+      usernameKey: username
+  cert:
+    commonName: "my-app.example.com"
+    dnsNames:
+      - "my-app.example.com"
+      - "www.my-app.example.com"
+    secretName: my-app-tls
+
+revisionHistoryLimit: 5  # Keep last 5 revisions for rollback
+
+dnsConfig:
+  enabled: false
+
+serviceAccount:
+  enabled: false  
+
+imagePullSecrets:
+  enabled: true
+  secrets:
+    - name: my-registry-secret
+    # You can add more if needed
+    # - name: another-secret
+
+statefulset:
+  enabled: false
+
+multipleroutes: true
+
+istio:
+  enabled: true
+  route:
+    enabled: true
+  routes:
+  - name: 
+    namespace: istio-system
+    host: <name>.apps.cluste name. fqdn
+    targtPort: https
+    tls:
+      termination: passthrough
+      insecurePolicy: Redirect
+    wildcard:
+      ploicy: none
+  gateway:
+    enabled: true
+    name: sampleapp-go7-http-gateway
+    selector: ingressgetway
+    unsecure_port: 80
+    hosts:
+    - <name>.apps.cluste name. fqdn
+    tls:
+      enabled: true
+      secure_port: 443
+      mode: SIMPLE
+      credentialNmae: < name of credential>
+  istio:
+  virtualservice:
+    enabled: true
+    name: ocp-sampleapp-go-vs1
+    rules:
+      - match:
+          - uri:
+              prefix: /api
+        route:
+          - destination:
+              host: ocp-sampleapp-go-svc
+              subset: stable
+              port:
+                number: 8080
+            weight: 80
+          - destination:
+              host: ocp-sampleapp-go-svc
+              subset: stable
+              port:
+                number: 8080
+            weight: 20
+  destinationrule:
+    enabled: true
+    name: ocp-sampleapp-go-svc
+    host: ocp-sampleapp-go-svc
+    subsets:
+      - name: stable
+        labels:
+          version: stable
+      - name: canary
+        labels:
+          version: canary
+  authorizationpolicy:
+    enabled: false
+
+proxyResources:
+  cpuRequest: 1m
+  cpuLimit: 100m
+  memRequest: 32Mi
+  memLimit: 256Mi
+
+envoyFilter:
+  enabled: true
+  name: xyz
+  namesace: xyz
+  priority: 0
+  port: 443
+  patchContext: GETWAY
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  regionMappings:
+    mumabi:
+      cidr: "^10%.100%.38%."
+    delhi:
+      cidr: "^10%.200%."
+  fallback: mumbai
+      
+  
+  
+          
+
+
+
+
+
+  
+  
+      
