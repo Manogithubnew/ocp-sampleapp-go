@@ -1,57 +1,50 @@
 {
-   "productName":" ocp-sampleapp-go"
-   "artifactType":"GO",
-   "appVersion":"1.0.1",
-   "platformProject":"ocp",
-   "atlasId""APP-xxx",
-   "imageDir":"sample-apps",
-   "environment":"dev",
-   "technicalSME":"X1234",
-   "asmNumber":"AS0001",
-   "defaultEmails":[
-       "manoranjan_d2004@yahoo.com"
-    ],
-   "artifactory-credential-id": "devops-artifact-account",
-   "vendorImage": true,
-   "stages": {
-       "gradle-build":{
-           "gradle-run-script": "",
-           "go0s": "linux",
-           "goArch": "amd64",
-           "java-version": "17",
-           "artifact-directory":"traget",
-           "test-result-xml":"**/test-results/**/*.xml",
-           "skip-test-flag": false,
-           "securityScan":{
-             "scanBranch":"master"
-           },
-           "sonarqube":true,
-           "sonar-exclusions": [],
-           "sonar-coverage-exclusions": []
-       },
-       "imageBuild": {
-           "imageSecurityPolicy": "critical",
-           "artifactName": "ocp-sampleapp-go",
-           "artifactUrl": "https://<artifact absolute path/ocp-sampleapp-go"
-       },
-      "ocpDeploy":{
-         "helmTemplateName": "ocp-helm-chart-ab-test",
-         "helmTemplateVersion": "0.1.0",
-         "deployEnvironments": {
-             "stg":{
-              "clusterName": "https://<cluster fqdn>:6443",
-              "namespace": "<name>",
-              "ocpJenkinsCredentials": "<credential or SA>",
-              "abTestingEnable": true
-             }
-         }
+  "productName": "ocp-sampleapp-go",
+  "artifactType": "GO",
+  "appVersion": "1.0.1",
+  "platformProject": "ocp",
+  "atlasId": "APP-xxx",
+  "imageDir": "sample-apps",
+  "environment": "dev",
+  "technicalSME": "X1234",
+  "asmNumber": "AS0001",
+  "defaultEmails": [
+    "manoranjan_d2004@yahoo.com"
+  ],
+  "artifactory-credential-id": "devops-artifact-account",
+  "vendorImage": true,
+  "stages": {
+    "gradle-build": {
+      "gradle-run-script": "",
+      "go0s": "linux",
+      "goArch": "amd64",
+      "java-version": "17",
+      "artifact-directory": "target",
+      "test-result-xml": "**/test-results/**/*.xml",
+      "skip-test-flag": false,
+      "securityScan": {
+        "scanBranch": "master"
+      },
+      "sonarqube": true,
+      "sonar-exclusions": [],
+      "sonar-coverage-exclusions": []
+    },
+    "imageBuild": {
+      "imageSecurityPolicy": "critical",
+      "artifactName": "ocp-sampleapp-go",
+      "artifactUrl": "https://<artifact absolute path>/ocp-sampleapp-go"
+    },
+    "ocpDeploy": {
+      "helmTemplateName": "ocp-helm-chart-ab-test",
+      "helmTemplateVersion": "0.1.0",
+      "deployEnvironments": {
+        "stg": {
+          "clusterName": "https://<cluster fqdn>:6443",
+          "namespace": "<name>",
+          "ocpJenkinsCredentials": "<credential or SA>",
+          "abTestingEnable": true
+        }
       }
-   }
-   
-      
-         
-            
-         
-         
-             
-  
+    }
+  }
+}
