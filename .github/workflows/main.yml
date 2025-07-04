@@ -1,0 +1,13 @@
+name: Build & Deploy
+on:
+  push:
+    branches:
+      - 'master'
+      - 'main'
+      - 'release/**'
+      - 'feature/**'
+    paths-ignore:
+      - '**/README.md'
+      - '.github/**'
+  pull_request:
+  
