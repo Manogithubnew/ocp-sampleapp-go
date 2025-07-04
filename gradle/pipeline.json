@@ -36,6 +36,21 @@
        },
       "ocpDeploy":{
          "helmTemplateName": "ocp-helm-chart-ab-test",
+         "helmTemplateVersion": "0.1.0",
+         "deployEnvironments": {
+             "stg":{
+              "clusterName": "https://<cluster fqdn>:6443",
+              "namespace": "<name>",
+              "ocpJenkinsCredentials": "<credential or SA>",
+              "abTestingEnable": true
+             }
+         }
+      }
+   }
+   
+      
+         
+            
          
          
              
