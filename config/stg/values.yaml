@@ -1,1 +1,105 @@
-abTestingEnable: true
+abTestingEnable: true 
+
+app:
+  variants:
+    - name: stable
+      version: stable
+    - name: canary
+      version: canary
+replicaCount: 1
+
+namesapce: < name>
+
+name: < name>
+
+image:
+  repository: < complete path>
+  tag: 1.0.0
+  pullPolicy: Always
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1%   # or use maxUnavailable
+  # maxUnavailable: 1
+
+env:
+  - name: APP_ENV
+    value: "stable"
+  - name: LOG_LEVEL
+    value: "error"
+  - name: API_URL
+    value: "https://api.example.com"
+
+envFrom:
+  configMap:
+    enabled: false
+  secret:
+     enabled: false
+     name: <name>
+
+livenessProbe:
+  enabled: false
+  httpGet:
+    path: /app/healthcheck
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1
+
+readinessProbe:
+  enabled: false
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+  successThreshold: 1
+
+startupProbe:
+  enabled: false
+  httpGet:
+    path: /healthz
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 2
+  failureThreshold: 30
+
+volumes:
+  enabled: true
+  configMap:
+    enabled: false
+  secretVolume:
+    enabled: false
+  ephemeralVolume:
+    enabled: false
+  nfs:
+    enabled: false
+    configs:
+    - name: nfs-volume
+    mountPath: /var/nfs
+    server: < IP>
+    path: < path>
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+service:
+  enabled: true
+
+
+
+
+
+
+
+
