@@ -215,7 +215,30 @@ destinationrule:
 authorizationpolicy:
   enabled: false
 
+proxyResource:
+  cpuRequest: 1m
+  cpuLimit: 100m
+  memRequest: 32Mi
+  memLimit: 256Mi
 
+eenvoyFilter:
+  enabled: true
+  name: <name>
+  namespace:
+  priority: 0
+  port: 443
+  pathContext: GETWAY
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+    regionMappings:
+      mumbai:
+        cidr: "^10%.100%.38%."
+      delhi:
+        cidr: "^10%.100%.38%."
+    fallback: mumbai
+    
+      
 
 
 
