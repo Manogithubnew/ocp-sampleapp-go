@@ -6,6 +6,7 @@ app:
       version: stable
     - name: canary
       version: canary
+      
 replicaCount: 1
 
 namesapce: < name>
@@ -95,6 +96,127 @@ resources:
 
 service:
   enabled: true
+
+services:
+  - port: 8080
+    targetPort: 8080
+    name: < name>
+    port_name: <name>
+
+cronjob:
+  enabled: false
+
+hpa:
+  enabled: false
+  max: 1
+  cpu: 80
+  memory: 80
+
+vpa:
+  enabled: false
+  replicaCount: 1
+  updateMode: Off
+  containerNmae: '*'
+
+venafi:
+  enabled: false
+  issuerName: venafi-issuer
+  issuerKind: ClusterIssuer  # or Issuer
+  zone: "DevOps\\TLS"
+  tpp:
+    url: "https://tpp.example.com"
+    credentialsRef: venafi-tpp-secret
+    trustBundle: ""
+  commonName: my-app.example.com
+  dnsNames:
+    - my-app.example.com
+    - my-app
+  appId: <ID>
+
+revisionHistoryLimit: 2
+
+antiAffinity: soft
+
+dnsConfig:
+  enabled: false
+
+serviceAccount:
+  enabled: false
+
+imagePullSecret:
+  enabled: false
+
+statefulset:
+  enabled: false
+
+multipleRoutes: true
+
+istio:
+  enabled: true
+  route:
+    enabled: true
+  routes:
+  - name: < name>
+    namespace: istio-system
+    hots: < host fqdn>
+    targetPort: https
+    tls:
+      termination: passthrough
+      insecurePolicy: Redirect  
+    wildcard:
+       policy: None
+  gateway:
+    enabled: true
+    name: < name>
+    selector: ingressgateway
+    unsecure_port: 80
+    hosts:
+    - < host>
+    tls:
+      enabled: true
+      secure_port: 443
+      mode: SIMPLE
+      credentialName: < name>
+
+istio:
+virtualservice:
+  enabled: true
+  name: < name>
+  rules:
+    - match:
+        - uri:
+            prefix: /api
+      route:
+        - destination:
+            host: < host>
+            subset: stable
+            port: 
+             number: 8080
+          weight: 80
+       - destination:
+            host: < host>
+            subset: canary
+            port: 
+             number: 8080
+          weight: 20
+
+destinationrule:
+  enabled: true
+  name: <name>
+  host: < host name>
+  subsets:
+    - name: stable
+      labels:
+        version: stable
+    - name: canary
+      labels:
+        version: canary
+
+authorizationpolicy:
+  enabled: false
+
+
+
 
 
 
