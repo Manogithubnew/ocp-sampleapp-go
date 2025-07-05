@@ -1,0 +1,44 @@
+plugins {
+    id 'base' // Minimal plugin for build lifecycle
+}
+
+group = 'com.example.goapp' // Your organization or project group
+
+def goOutputDir = "${buildDir}/go"
+def goBinaryName = "ocp-sampleapp-go"
+def goMainDir = "${projectDir}/src"  // Path to your Go main package (adjust if needed)
+def distDir = "${buildDir}/dist"
+
+allprojects {
+    repositories {
+        // Add repositories if needed for other plugins
+    }
+}
+
+task goBuild(type: Exec) {
+    group = 'build'
+    description = 'Build Go binary'
+
+    inputs.dir(goMainDir)
+    outputs.dir(goOutputDir)
+
+    doFirst {
+        mkdir(goOutputDir)
+    }
+
+    workingDir goMainDir
+    commandLine 'go', 'build', '-o', "${goOutputDir}/${goBinaryName}", '.'
+}
+
+task copyGoExecutable(type: Copy) {
+    group = 'build'
+    description = 'Copy Go binary to distribution directory'
+
+    dependsOn goBuild
+
+    from("${goOutputDir}/${goBinaryName}")
+    into(distDir)
+    rename { goBinaryName }
+}
+
+build.dependsOn goBuild, copyGoExecutable
